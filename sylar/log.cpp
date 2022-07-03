@@ -60,4 +60,23 @@ namespace sylar {
         ,m_level(level) {
     }
 
+    // 可变参数列表，先初始化一个 va_list，而后将至臻zhi向 fmt，format 中获取内容，最终 va_end 释放指针
+    void LogEvent::format(const char* fmt, ...) {
+        va_list al;
+        va_start(al, fmt);
+        format(fmt, al);
+        va_end(al);
+    }
+
+    void LogEvent::format(const char* fmt, va_list al) {
+        char* buf = nullptr;
+        //vasprintf()函数 :int vasprintf (char **buf, const char *format, va_list ap)
+        // 将格式化数据从可变参数列表写入缓冲区
+        int len = vasprintf(&buf, fmt, al);
+        if(len != -1) {
+            m_ss << std::string(buf, len);
+            free(buf);
+        }
+    }
+
 }
