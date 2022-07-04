@@ -163,6 +163,17 @@ private:
  * @brief 日志事件包装器
  */
 class LogEventWrap {
+public:
+    /**
+     * @brief 构造函数
+     * @param[in] e 日志事件
+     */
+    LogEventWrap(LogEvent::ptr log_event);
+
+    /**
+     * @brief 析构函数
+     */
+    ~LogEventWrap();
 
 };
 
