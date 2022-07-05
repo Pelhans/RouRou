@@ -26,11 +26,6 @@ public:
      * @brief 赋值函数（禁用）
      */
     Noncopyable& operator=(const Noncopyable&) = delete;
-
-    /**
-     * @brief 禁用拷贝赋值构造函数
-     */
-    Noncopyable& operator=(const Noncopyable&) = delete;
 };
 
 }

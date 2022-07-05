@@ -11,6 +11,8 @@
 #include <stdarg.h>
 #include <map>
 
+#include "mutex.h"
+
 namespace sylar {
 
 class Logger;
@@ -191,6 +193,36 @@ private:
      */
     LogEvent::ptr m_event;
 
+};
+
+/**
+ * @brief 日志器管理类，通过配置读取来控制/初始化日志器 Logger
+ */
+class LoggerManager {
+public:
+    typedef Spinlock MutexType;
+    /**
+     * @brief 构造函数
+     */
+    LoggerManager();
+
+    /**
+     * @brief 获取日志器
+     * @param name 日志器名称
+     */
+    Logger::ptr getLogger(const std::string& name);
+
+    /**
+     * @brief 初始化
+     */
+    void init();
+private:
+    // Mutex
+    MutexType m_mutex;
+    /// 日志器容器
+    std::map<std::string, Logger::ptr> m_loggers;
+    /// 主日志器
+    Logger::ptr m_root;
 };
 
 /**

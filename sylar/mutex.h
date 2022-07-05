@@ -164,5 +164,38 @@ class Spinlock : Noncopyable {
 public:
     // 局部锁
     typedef ScopedLockImpl<Spinlock> Lock;
+
+    /**
+     * @brief 构造函数
+     */
+    Spinlock() {
+        pthread_spin_init(&m_mutex, 0);
+    }
+
+    /**
+     * @brief 构造函数
+     */
+    ~Spinlock() {
+        pthread_spin_destroy(&m_mutex);
+    }
+
+    /**
+     * @brief 上锁
+     */
+    void lock() {
+        pthread_spin_lock(&m_mutex);
+    }
+
+    /**
+     * @brief 解锁
+     */
+    void unlock() {
+        pthread_spin_unlock(&m_mutex);
+    }
+
+private:
+    //自旋锁
+    pthread_spinlock_t m_mutex;
 };
+
 }

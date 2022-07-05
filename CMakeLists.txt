@@ -25,6 +25,7 @@ endif()
 # 添加cc 文件
 set(LIB_SRC
     sylar/log.cpp
+    sylar/mutex.cpp
 )
 
 add_library(sylar SHARED ${LIB_SRC})

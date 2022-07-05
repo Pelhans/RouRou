@@ -83,14 +83,21 @@ namespace sylar {
         :m_event(e) {};
     
     LogEventWrap::~LogEventWrap() {
-        m_event->getLogger()->log(m_event->getLevel(), m_event);
+        // m_event->getLogger()->log(m_event->getLevel(), m_event);
     }
 
     std::stringstream& LogEventWrap::getSS() {
         return m_event->getSS();
     }
 
-    
+    LoggerManager::LoggerManager() {
+        m_root.reset(new Logger);
+        m_root->addAppender(LogAppender::ptr(new StdoutLogAppender));
+
+        m_loggers[m_root->m_name] = m_root;
+
+        init();
+    }
 
 
 }
