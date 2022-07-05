@@ -175,7 +175,40 @@ public:
      */
     ~LogEventWrap();
 
+    /**
+     * @brief 获取日志事件
+     */
+    LogEvent::ptr getEvent() const {return m_event;}
+
+    /**
+     * @brief 获取日志内容流
+     */
+    std::stringstream& getSS();
+
+private:
+    /**
+     * @brief 日志事件
+     */
+    LogEvent::ptr m_event;
+
 };
+
+/**
+ * @brief 日志器，对日志进行操作
+ */
+class Logger : public std::enable_shared_from_this<Logger> {
+friend class LoggerManager;
+public:
+    typedef std::shared_ptr<Logger> ptr;
+    typedef Spinlock Mutextype;
+
+    /**
+     * @brief 构造函数
+     * @param name 日志器名称
+     */
+    Logger(const std::string& name = "root");
+};
+
 
 
 
