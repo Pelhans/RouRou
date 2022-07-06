@@ -239,8 +239,116 @@ public:
      * @param name 日志器名称
      */
     Logger(const std::string& name = "root");
+
+private:
+    // 日志名称
+    std::string m_name;
+    // 日志级别
+    LogLevel::Level m_level;
+    // Mutex
+    Mutextype m_mutex;
+    // 日志目标集合
+    std::list<LogAppender::ptr> m_appenders;
+    // 日志格式器
+    LogFormatter::ptr m_formatter;
+    //主日志器
+    Logger::ptr m_root;
 };
 
+/**
+ * @brief 日志输出目标的基类
+ */
+class LogAppender {
+friend class Logger;
+public:
+    typedef std::shared_ptr<LogAppender> ptr;
+    typedef Spinlock MutexType;
+
+    /**
+     * @brief 析构函数
+     */
+    virtual ~LogAppender() {}
+
+    /**
+     * @brief 写入日志
+     */
+    virtual void log(std::shared_ptr<Logger> logger, LogLevel::Level level,
+                    LogEvent::ptr event) = 0;
+    
+    /**
+     * @brief 将日志输出目标的配置转成 YAML String
+     */
+    virtual std::string toYamlString() = 0;
+
+    /**
+     * @brief 更改日志格式器
+     */
+    void setFormatter(LogFormatter::ptr val);
+
+    /**
+     * @brief 获取日志格式器
+     */
+    LogFormatter::ptr getFormatter();
+
+    /**
+     * @brief 获取日志级别
+     */
+    LogLevel::Level getLevel() const {return m_level};
+
+    /**
+     * @brief 设置日志级别
+     */
+    void setLevel(LogLevel::Level val) {m_level = val};
+
+protected:
+    // 日志级别
+    LogLevel::Level m_level = LogLevel::DEBUG;
+    // 是否有自己的日志格式
+    bool m_hasFormatter = false;
+    // Mutex
+    MutexType m_mutex;
+    // 日志格式器
+    LogFormatter::ptr m_formatter;
+};
+
+/**
+ * @brief 日志格式化
+ */
+class LogFormatter {
+public:
+    typedef std::shared_ptr<LogFormatter> ptr;
+    /**
+     * @brief 构造函数
+     * @param[in] pattern 格式模板
+     * @details 
+     *  %m 消息
+     *  %p 日志级别
+     *  %r 累计毫秒数
+     *  %c 日志名称
+     *  %t 线程id
+     *  %n 换行
+     *  %d 时间
+     *  %f 文件名
+     *  %l 行号
+     *  %T 制表符
+     *  %F 协程id
+     *  %N 线程名称
+     *  默认格式 "%d{%Y-%m-%d %H:%M:%S}%T%t%T%N%T%F%T[%p]%T[%c]%T%f:%l%T%m%n"
+     */
+    LogFormatter(const std::string& pattern);
+
+    /**
+     * @brief 初始化，解析日志模板
+     */
+    void init();
+private:
+    // 日志格式模板
+    std::string m_pattern;
+    // 日志格式解析后的对应格式
+    std::vector<LogFormatItem::ptr> m_items;
+    // 是否有错误
+    bool m_error = false;
+};
 
 
 
