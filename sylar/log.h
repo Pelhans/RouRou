@@ -1,5 +1,4 @@
-#ifndef __SYLAR_LOG_H__
-#define __SYLAR_LOG_H__
+#pragma once
 
 #include <string>
 #include <stdint.h>
@@ -353,5 +352,3 @@ private:
 
 
 }
-
-#endif
