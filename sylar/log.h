@@ -239,6 +239,43 @@ public:
      */
     Logger(const std::string& name = "root");
 
+    /**
+     * @brief 写日志
+     * @param[in] level 日志级别
+     * @param[in] event 日志事件
+     */
+    void log(LogLevel::Level level, LogEvent::ptr event);
+
+    /**
+     * @brief 写debug级别日志
+     * @param[in] event 日志事件
+     */
+    void debug(LogEvent::ptr event);
+
+    /**
+     * @brief 写info级别日志
+     * @param[in] event 日志事件
+     */
+    void info(LogEvent::ptr event);
+
+    /**
+     * @brief 写warn级别日志
+     * @param[in] event 日志事件
+     */
+    void warn(LogEvent::ptr event);
+
+    /**
+     * @brief 写error级别日志
+     * @param[in] event 日志事件
+     */
+    void error(LogEvent::ptr event);
+
+    /**
+     * @brief 写fatal级别日志
+     * @param[in] event 日志事件
+     */
+    void fatal(LogEvent::ptr event);
+
 private:
     // 日志名称
     std::string m_name;
