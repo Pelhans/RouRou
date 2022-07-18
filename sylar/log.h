@@ -337,14 +337,55 @@ public:
     LogFormatter(const std::string& pattern);
 
     /**
+     * @brief 返回格式化日志文本
+     */
+    std::string format(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event);
+    std::ostream& format(std::ostream& ofs, std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event);
+
+    /**
      * @brief 初始化，解析日志模板
      */
     void init();
+
+public:
+
+    /**
+     * @brief 日志内容项格式化
+     */
+    class FormatItem {
+    public:
+        typedef std::shared_ptr<FormatItem> ptr;
+        /**
+         * @brief 析构函数
+         */
+        virtual ~FormatItem() {}
+        /**
+         * @brief 格式化日志到流
+         * @param[in, out] os 日志输出流
+         * @param[in] logger 日志器
+         * @param[in] level 日志等级
+         * @param[in] event 日志事件
+         */
+        virtual void format(std::ostream& os, std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) = 0;
+    };
+
+    /**
+     * @brief 是否有错误
+     */
+    bool isError() const { return m_error;}
+
+    /**
+     * @brief 返回日志模板
+     */
+    const std::string getPattern() const { return m_pattern;}
+
+
+
 private:
     // 日志格式模板
     std::string m_pattern;
     // 日志格式解析后的对应格式
-    std::vector<LogFormatItem::ptr> m_items;
+    std::vector<FormatItem::ptr> m_items;
     // 是否有错误
     bool m_error = false;
 };
